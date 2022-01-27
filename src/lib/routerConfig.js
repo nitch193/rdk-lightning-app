@@ -1,7 +1,7 @@
 
 
 import { Item } from "../components";
-import { Main, Search, Splash, Detail, Player } from "../pages";
+import { Main, Search, Splash, Detail, Player, newPlayer } from "../pages";
 import { getDetailPage, getHomePage, getMoviesPage, getSearchResults, getSeriesPage } from "./api.js";
 import { applyItemModel, applyPlayerModel, createItemCollection, createPageComponents } from "./Factory.js";
 const routes = [
@@ -73,7 +73,7 @@ const routes = [
     },
     {
         path: 'player/:mediaType/:mediaId',
-        component: Player,
+        component: newPlayer,
         before: async (page, {mediaType, mediaId}) => {
             getDetailPage(mediaType, mediaId)
                 .then((response) => {
