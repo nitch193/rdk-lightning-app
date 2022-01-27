@@ -107,12 +107,12 @@ export default class Detail extends Lightning.Component {
 
     showMore(data) {
         this._loadingData = true;
-        let { number_of_episodes, number_of_seasons, media_type, large_poster, backdrop, genres, runtime = ''} = data;
+        let { number_of_episodes, number_of_seasons, media_type, large_poster, backdrop, genres, runtime = '', language} = data;
         
         const titleInfo = [media_type.charAt(0).toUpperCase() + media_type.slice(1)];
 
         if(genres.length > 0) {
-            titleInfo.push(genres.map((genre) => genre.name).join(', '))
+            titleInfo.push(`${genres} - ${language}`)
         }
 
         if(runtime && (runtime + '').length > 0) {

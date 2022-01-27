@@ -1,28 +1,11 @@
-/**
- * Copyright 2021 Comcast Cable Communications Management, LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * SPDX-License-Identifier: Apache-2.0
- */
 
-const _baseUrl = 'https://api.themoviedb.org/3/';
+
+const _baseUrl = 'http://54.82.71.159:3000';
 const _headers = {
     'Content-Type': 'application/json;charset=utf-8'
 };
 const _params = {
-    'api_key': '66683917a94e703e14ca150023f4ea7c',
-    include_adult: false,
+    include_adult: true,
     include_video: true,
     region: 'NL'
 };
@@ -80,7 +63,7 @@ const _request = ({url, target, params = {}, headers = {}, exceptions = {}, meth
     if(method !== 'GET') {
         body = JSON.stringify(params);
     }
-    if(method === 'GET' && params) {
+    if(method === 'GET' && !params) {
         url += `?${qsify(params)}`;
     }
     return _executeRequest({url, target, body, headers, exceptions, method, timeout})
@@ -113,9 +96,9 @@ const _fetchPageData = (lists, itemParams = {}) => {
     return Promise.all(calls)
         .then((response) => {
             return response.map((list, index) => {
-                return {title: lists[index].title, ...itemParams, items: list.results}
+                return {title: lists[index].title, ...itemParams, items: list}
             })
-            .filter((strip) => strip.items.length > 0);
+            .filter((strip) => strip.items.length > 0 );
         });
 }
 
@@ -129,8 +112,8 @@ export const getSearchResults = (query) => {
 
 export const getHomePage = () => {
     return _fetchPageData([
-        {path: 'trending/all/day', title: 'Trending Today'},
-        {path: 'trending/all/week', title: 'Trending this Week'},
+        {path: '/detail/', title: 'Channels'},
+        // {path: 'trending/all/week', title: 'Trending this Week'},
     ]);
 }
 
@@ -158,7 +141,7 @@ export const getSeriesPage = () => {
 }
 
 export const getDetailPage = (mediaType, mediaId) => {
-    return getRequest({target: `${mediaType}/${mediaId}`, params: {append_to_response: 'episode_groups,images'}})
+    return getRequest({target: `/detail/${mediaId}`, params: {append_to_response: 'episode_groups,images'}})
         .then((response) => {
             return {media_type: mediaType, ...response};
         })
